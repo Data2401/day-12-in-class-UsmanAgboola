@@ -26,7 +26,8 @@ my_flights <- flights ## getting a copy of the data in the environment
 1. Use functions to inspect it: how many rows and columns does it have? What are the names of the columns? Hint: Use `??flights` to search for documentation on the data set (for what the columns contain)
 
 ```{r}
-
+table(my_flights)
+glimpse(my_flights) 
 ```
 
 
@@ -83,8 +84,12 @@ New skill: Use `.before = 1` as an argument to `mutate` to add the new variables
 Go back to our flights exercise data. Consider flights from JFK to SEA. What was the average, min, and max air time of those flights? Use pipes to answer this question in one statement (without showing any other data)!
 
 ```{r}
-
-
+#my_flights %>% 
+ # filter(dest == "SEA", origin == "JFK") %>% 
+  #summarise(avg = mean(air_time, na.rm = T),
+   #         minimum = (min(air_time, na.rm = T), 
+      #      maximum = (max(air_time, na.rm = T)
+       #  )
 ```
 
 Consider flights coming into Houston (HOU and IAH). What is the mean arrival delay by departure airport? 
@@ -127,7 +132,9 @@ We're going to use this to practice some data wrangling with `dplyr`.
 How many characters are from each planet?
 
 ```{r}
-
+starwars %>% 
+  count(homeworld, sort = T)
+  
 
 
 ```
@@ -135,12 +142,19 @@ How many characters are from each planet?
 If you wanted to arrange this in descending order, what would you add to the pipe? 
 
 ```{r}
-
+starwars %>% 
+  count(homeworld, sort = T) %>% 
+  arrange(-n)
+  
 ```
 
 Find the average height for each eye color. You might find some of the answers to be strange, but keep going! 
 
 ```{r}
+starwars %>% 
+  group_by(eye_color) %>% 
+  summarise(avg_height= mean(height, na.rm = T)) %>% 
+  arrange(-avg_height)
 
 
 ```
@@ -149,8 +163,11 @@ So.... What's with the NAs? Filter down to just brown eyes find out what's going
 
 
 ```{r}
-
-
+starwars %>%
+  select(name, eye_color) %>% 
+  filter(eye_color == "brown")
+  
+  
 ```
 
 Okay, so we have missing data here. Try summarising with `na.omit(height)` instead of just `height` or adding `na.rm = T` to the mean function inside summarize. 
